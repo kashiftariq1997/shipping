@@ -6,7 +6,6 @@ export const getRates = async (shipment: GetAftershipRatesType) => {
     const rates = await getAftershipRates(shipment)
 
     const parsedRates = rates.map(rate => {
-      console.log(rate, "rate")
         return {
           ServiceName: rate.service_name,
           charges: {
@@ -25,5 +24,4 @@ export const getRates = async (shipment: GetAftershipRatesType) => {
     console.log((error as any).message);
     return []
   }
-
 };
