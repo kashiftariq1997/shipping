@@ -1,28 +1,23 @@
 import { getAftershipRates } from "../aftershipService";
+import { GetAftershipRatesType } from "../interfaces";
 
-export const getRates = async () => {
+export const getRates = async (shipment: GetAftershipRatesType) => {
   try {
-    console.log("1")
-    const rates = await getAftershipRates()
-    console.log("2")
+    const rates = await getAftershipRates(shipment)
 
     const parsedRates = rates.map(rate => {
-      const {  rates: ratesData } = rate
-
-      console.log(ratesData.length, "Length of rates")
-      return ratesData.map(data => {
-        console.log(data.service_name, ":L:L:")
+      console.log(rate, "rate")
         return {
-          ServiceName: data.service_name,
+          ServiceName: rate.service_name,
           charges: {
-            weight: data.charge_weight,
+            weight: rate.charge_weight,
             perUnit: {
-              data: data.total_charge.amount * 1.1, // Adding 10% to the total charge
-              currency: data.total_charge.currency
+              orignal: rate.total_charge.amount,
+              data: rate.total_charge.amount * 1.1,
+              currency: rate.total_charge.currency
             }
           }
-        };
-      })
+        }
     });
 
     return parsedRates;

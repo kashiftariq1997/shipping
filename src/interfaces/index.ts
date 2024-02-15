@@ -1,6 +1,6 @@
 export interface GetRatesResponseType {
   meta: Meta
-  data: Data
+  data: Rate
 }
 
 export interface Meta {
@@ -41,11 +41,11 @@ export interface Rate2 {
   detailed_charges: DetailedCharge[]
 }
 
-export interface ShipperAccount {
-  id: string
-  slug: string
-  description: string
-}
+// export interface ShipperAccount {
+//   id: string
+//   slug: string
+//   description: string
+// }
 
 export interface ChargeWeight {
   value: number
@@ -65,4 +65,82 @@ export interface DetailedCharge {
 export interface Charge {
   amount: number
   currency: string
+}
+
+export interface ShipperAccount {
+  id: string
+}
+
+export type ShipAddress = {
+  street1: string
+  country: string
+  contact_name: string
+  company_name?: string
+  city?: string
+  state?: string
+  postal_code?: string
+  phone?: string
+  email?: string
+}
+
+export type ReturnTo = ShipAddress  & {
+  street2?: string
+  type?: string
+}
+
+export type Parcel = {
+  box_type: string
+  dimension: Dimension
+  items: Item[]
+  description: string
+  weight: Weight
+}
+
+export type Dimension = {
+  width: number
+  height: number
+  depth: number
+  unit: string
+}
+
+export type Item = {
+  weight: Weight
+  description: string
+  quantity: number
+  price?: Price
+  item_id?: string
+  origin_country?: string
+  sku?: string
+  hs_code?: string
+}
+
+export type Price = {
+  currency: string
+  amount: number
+}
+
+export type Weight = {
+  unit: string
+  value: number
+}
+
+
+export type GetAftershipRatesType = {
+  from: ShipAddress;
+  to: ShipAddress;
+  parcels: Parcel[];
+  returnTo?: ReturnTo;
+}
+
+export type Shipment = {
+  ship_from: ShipAddress
+  ship_to: ShipAddress
+  parcels: Parcel[]
+  return_to?: ReturnTo
+  delivery_instructions: string
+}
+
+export type GetAftershipRatesPayloadType = {
+  shipment: Shipment,
+  shipper_accounts?: ShipperAccount[]
 }
