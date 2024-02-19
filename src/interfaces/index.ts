@@ -26,6 +26,12 @@ export interface Rate {
   rates: Rate2[]
 }
 
+export interface ShipperAccount {
+  id: string
+  slug?: string
+  description?: string
+}
+
 export interface Rate2 {
   shipper_account: ShipperAccount
   service_type: string
@@ -40,12 +46,6 @@ export interface Rate2 {
   total_charge: TotalCharge
   detailed_charges: DetailedCharge[]
 }
-
-// export interface ShipperAccount {
-//   id: string
-//   slug: string
-//   description: string
-// }
 
 export interface ChargeWeight {
   value: number
@@ -67,8 +67,8 @@ export interface Charge {
   currency: string
 }
 
-export interface ShipperAccount {
-  id: string
+export interface CustomFields {
+  ship_code: string
 }
 
 export type ShipAddress = {
@@ -124,12 +124,18 @@ export type Weight = {
   value: number
 }
 
-
 export type GetAftershipRatesType = {
   from: ShipAddress;
   to: ShipAddress;
   parcels: Parcel[];
   returnTo?: ReturnTo;
+}
+
+export type LabelPayloadType   = GetAftershipRatesType & {
+  return_shipment: boolean
+  is_document: boolean
+  service_type: string
+  paper_size: string
 }
 
 export type Shipment = {
@@ -140,7 +146,64 @@ export type Shipment = {
   delivery_instructions: string
 }
 
+export type LabelShipment = Omit<Shipment, 'delivery_instructions'>
+
 export type GetAftershipRatesPayloadType = {
   shipment: Shipment,
   shipper_accounts?: ShipperAccount[]
+}
+
+export interface CreateLabelPayload {
+  return_shipment: boolean
+  is_document: boolean
+  service_type: string
+  paper_size: string
+  shipper_account: ShipperAccount
+  references: string[]
+  shipment: LabelShipment
+  custom_fields: CustomFields
+}
+
+
+export interface CreateLabelResponse {
+  data: Data
+}
+
+export interface Data {
+  id: string
+  status: string
+  ship_date: string
+  created_at: string
+  updated_at: string
+  tracking_numbers: string[]
+  carrier_references: any[]
+  files: Files
+  rate: Rate2
+  references: string[]
+  order_id: any
+  order_number: any
+  service_type: string
+  shipper_account: ShipperAccount
+  service_options: any[]
+  custom_fields: CustomFields
+}
+
+export interface Files {
+  label: Label
+  qr_code: any
+  invoice: any
+  customs_declaration: any
+  manifest: any
+  packing_slip: any
+}
+
+export interface Label {
+  paper_size: string
+  url: string
+  file_type: string
+}
+
+export interface DetailedCharge {
+  type: string
+  charge: Charge
 }

@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { GetAftershipRatesPayloadType, GetAftershipRatesType, GetRatesResponseType, Rate2 } from '../interfaces';
+import {
+  CreateLabelPayload, CreateLabelResponse, GetAftershipRatesPayloadType, GetAftershipRatesType,
+  GetRatesResponseType, LabelPayloadType, Rate2
+} from '../interfaces';
 
 const axiosClient = axios.create({
   baseURL:  process.env.AFTER_SHIP_ENDPOINT ||  'https://sandbox-api.aftership.com/postmen/v3',
@@ -32,6 +35,43 @@ export const getAftershipRates = async (inputs: GetAftershipRatesType): Promise<
     const { data: rateData } = data || {}
 
     return rateData.rates;
+  } catch (error) {
+    console.log("*********** Error in getAftershipRates ***********")
+    console.log(error)
+    return []
+  }
+}
+
+export const createLabel = async (inputs: LabelPayloadType): Promise<any> => {
+  const {
+    from, is_document, paper_size, parcels, return_shipment, service_type, to
+  } = inputs
+
+  const body: CreateLabelPayload = {
+    return_shipment,
+    is_document,
+    service_type,
+    paper_size,
+    shipper_account: {
+      id: "3ba41ff5-59a7-4ff0-8333-64a4375c7f21"
+    },
+    references: [
+      "refernce1"
+    ],
+    shipment: {
+      ship_from: from,
+      ship_to: to,
+      parcels: parcels
+    },
+    custom_fields: {
+      ship_code: "01"
+    }
+  }
+
+  try {
+    const { data }  = await axiosClient.post<CreateLabelResponse>('/labels', JSON.stringify(body) )
+    const { data: createLabelData } = data
+    return createLabelData;
   } catch (error) {
     console.log("*********** Error in getAftershipRates ***********")
     console.log(error)

@@ -1,5 +1,5 @@
-import { getAftershipRates } from "../aftershipService";
-import { GetAftershipRatesType } from "../interfaces";
+import { createLabel, getAftershipRates } from "../aftershipService";
+import { CreateLabelPayload, GetAftershipRatesType, LabelPayloadType } from "../interfaces";
 
 export const getRates = async (shipment: GetAftershipRatesType) => {
   try {
@@ -20,6 +20,17 @@ export const getRates = async (shipment: GetAftershipRatesType) => {
     });
 
     return parsedRates;
+  } catch (error) {
+    console.log((error as any).message);
+    return []
+  }
+};
+
+export const createLabelforShipment = async (payload: LabelPayloadType) => {
+  try {
+    const label = await createLabel(payload)
+
+    return label;
   } catch (error) {
     console.log((error as any).message);
     return []
