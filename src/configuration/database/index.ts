@@ -5,7 +5,7 @@ const dbConnection = async () => {
         const databaseUrl = process.env.DATABASE_URL;
         const databaseName = process.env.DATABASE_NAME;
 
-        const connection = await mongoose.connect(`mongodb://${databaseUrl}/${databaseName}`, {
+        const connection = await mongoose.connect(`${databaseUrl}${databaseName}&retryWrites=true&w=majority`, {
             // useNewUrlParser: true,
             // useUnifiedTopology: true
         });

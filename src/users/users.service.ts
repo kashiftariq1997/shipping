@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/user';
 import { comparePassword, hashPassword } from '../lib';
+import { CreateUser } from '../interfaces';
 
 export const getUserById = async (userId: string) => {
   try {
@@ -16,7 +17,7 @@ export const getUserById = async (userId: string) => {
   }
 }
 
-export const createUser = async (userData: any) =>{
+export const createUser = async (userData: CreateUser) =>{
   try {
     const { firstName, lastName, email, password } = userData;
     const existingUser = await User.findOne({ email });
